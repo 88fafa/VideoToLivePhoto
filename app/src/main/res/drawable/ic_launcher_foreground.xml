@@ -1,0 +1,39 @@
+<!-- ic_launcher_foreground.xml - 应用图标前景 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="21.6"
+        android:translateY="21.6">
+        <!-- 照片外框 -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M10,15h88v70h-88z"/>
+        
+        <!-- 照片内部 -->
+        <path
+            android:fillColor="#E3F2FD"
+            android:pathData="M15,20h78v60h-78z"/>
+        
+        <!-- 播放按钮圆圈 -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M54,40c-8.8,0 -16,7.2 -16,16s7.2,16 16,16s16,-7.2 16,-16s-7.2,-16 -16,-16z"/>
+        
+        <!-- 播放三角形 -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M50,48l12,8l-12,8z"/>
+        
+        <!-- 动态效果弧线 -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M20,75 Q54,85 88,75"
+            android:strokeWidth="3"
+            android:strokeColor="#2196F3"
+            android:strokeLineCap="round"/>
+    </group>
+</vector>
