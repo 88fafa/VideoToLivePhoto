@@ -19,20 +19,37 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v3
-      with:
-        gradle-version: 8.5
-        cache-disabled: true
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Grant execute permission for gradlew
+      run: |
+        mkdir -p gradle/wrapper
+        echo 'distributionBase=GRADLE_USER_HOME' > gradle/wrapper/gradle-wrapper.properties
+        echo 'distributionPath=wrapper/dists' >> gradle/wrapper/gradle-wrapper.properties
+        echo 'distributionUrl=https\\://services.gradle.org/distributions/gradle-8.5-bin.zip' >> gradle/wrapper/gradle-wrapper.properties
+        echo 'networkTimeout=10000' >> gradle/wrapper/gradle-wrapper.properties
+        echo 'validateDistributionUrl=true' >> gradle/wrapper/gradle-wrapper.properties
+        echo 'zipStoreBase=GRADLE_USER_HOME' >> gradle/wrapper/gradle-wrapper.properties
+        echo 'zipStorePath=wrapper/dists' >> gradle/wrapper/gradle-wrapper.properties
+        curl -L https://services.gradle.org/distributions/gradle-8.5-bin.zip -o gradle.zip
+        unzip -q gradle.zip
+        mv gradle-8.5 gradle-home
     
     - name: Build Debug APK
-      run: gradle assembleDebug --info --stacktrace
-      continue-on-error: true
-    
-    - name: Check APK exists
       run: |
-        ls -la app/build/outputs/apk/debug/ || echo "APK directory not found"
-        find . -name "*.apk" -type f
+        export GRADLE_USER_HOME=$PWD/gradle-home
+        $PWD/gradle-home/bin/gradle wrapper --gradle-version 8.5
+        ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
+    
+    - name: Check build outputs
+      run: |
+        echo "=== Build outputs ==="
+        ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug APK directory not found"
+        echo "=== All APK files ==="
+        find . -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
+        echo "=== Build log (last 100 lines) ==="
+        tail -100 build.log || echo "No build log"
     
     - name: Upload Debug APK
       uses: actions/upload-artifact@v4
